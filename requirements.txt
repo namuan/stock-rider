@@ -1,0 +1,7 @@
+click
+black
+yfinance
+pandas
+numpy
+tqdm
+sqlalchemy
