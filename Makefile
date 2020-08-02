@@ -18,8 +18,11 @@ clean: ## Clean package
 run: lint ## Run all unit tests
 	./venv/bin/python local_main.py
 
-prevday: ## Populate data from previous day
-	./venv/bin/python local_main.py populate-data --stocks ALTM --start 2020-07-29 --end 2020-08-02 --interval 1d
+populate: ## Populate data from previous day
+	./venv/bin/python local_main.py populate-data --start 2020-02-01 --interval 1d
+
+volume: ## Run Volume Analysis
+	./venv/bin/python local_main.py volume-analysis --period 200
 
 package: clean
 	./pypi.sh
