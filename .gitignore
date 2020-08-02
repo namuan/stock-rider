@@ -19,3 +19,4 @@ setup.py.bak
 .idea/
 geckodriver.log
 *.db
+.env

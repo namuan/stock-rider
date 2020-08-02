@@ -1,9 +1,12 @@
 import logging
+from datetime import datetime, timedelta
 
 import pandas as pd
 from pandas import DataFrame
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError, OperationalError
+
+skip_days = timedelta(days=2)
 
 
 class StockStore:
@@ -22,9 +25,9 @@ class StockStore:
                 index_label="Datetime",
             )
         except IntegrityError as e:
-            logging.debug("Unable to save data", e)
+            logging.warning("Unable to save data: {}".format(e.args[0]))
 
-        logging.debug("Saving ticker: {} with data: {}".format(ticker, data.shape))
+        logging.info("Saving ticker: {} with data: {}".format(ticker, data.shape))
 
     def data_for_ticker(self, ticker, period):
         sql = f"""
@@ -36,6 +39,16 @@ class StockStore:
         except OperationalError as e:
             logging.debug("Error when reading data for {} - {}".format(ticker, e.args[0]))
             return pd.DataFrame()
+
+    def find_start_time(self, ticker, default_dt):
+        last_entry = self.data_for_ticker(ticker, 1)
+        start_time = default_dt if last_entry.empty else self._next_day(last_entry["Datetime"].loc[0])
+        return start_time
+
+    def _next_day(self, dt):
+        last_entry_dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S.%f")
+        last_entry_dt += skip_days
+        return last_entry_dt
 
     def _create_table_if_required(self, ticker):
         self.db_connection.execute(

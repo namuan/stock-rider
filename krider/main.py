@@ -36,8 +36,8 @@ def cli():
     help="Download historical data and fill gaps for provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
 def populate_data(interval, start, end, stocks):
-    start_dt = datetime.strptime(start, "%Y-%m-%d")
-    end_dt = datetime.strptime(end, "%Y-%m-%d")
+    start_dt = datetime.strptime(start, "%Y-%m-%d") if start else None
+    end_dt = datetime.strptime(end, "%Y-%m-%d") if end else None
     result = historical_data_downloader.run_with(interval, start_dt, end_dt, stocks)
     click.echo(result, nl=False)
 

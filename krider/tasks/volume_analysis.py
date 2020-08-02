@@ -1,11 +1,13 @@
 import logging
+from datetime import datetime
+from urllib import parse
 
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from tqdm import tqdm
 
-from krider.notifications.console_notifier import notifier
+from krider.notifications.reddit_notifier import reddit_notifier
 from krider.stock_store import stock_store
 from krider.ticker_data import ticker_data
 from krider.utils.timing_decorator import timeit
@@ -24,17 +26,23 @@ class VolumeAnalysisTask:
             selected_stocks = stocks.split(",")
             exchange_tickers = exchange_tickers[exchange_tickers.index.isin(selected_stocks)]
 
+        collective_post = []
+
         for ticker, ticker_df in tqdm(exchange_tickers.iterrows()):
-            logging.info("Running analysis on {}".format(ticker))
+            logging.debug("Running analysis on {}".format(ticker))
             selected_data: DataFrame = stock_store.data_for_ticker(ticker, period)
             if selected_data.empty:
                 continue
 
             if self._if_anomaly_found(selected_data):
-                # self._back_test_anomalies(selected_data)
-                packaged_output = self._prepare_output(selected_data.iloc[0])
-                notifier.send_notification(ticker, packaged_output)
+                collective_post.append(self._prepare_output(ticker, selected_data.iloc[0]))
 
+        content = dict(
+            title="High Volume Indicator",
+            flair_id="ae574132-d4de-11ea-9fd2-0e0ab6312af9",
+            body="\n".join(collective_post)
+        )
+        reddit_notifier.send_notification(content)
         return "All done"
 
     def _back_test_anomalies(self, df):
@@ -44,11 +52,31 @@ class VolumeAnalysisTask:
 
     def _if_anomaly_found(self, df):
         mean = np.mean(df["Volume"])
+        df["MeanVolume"] = mean
         previous_session_vol = df["Volume"].iloc[0]
-        return previous_session_vol > (10 * mean)
+        return previous_session_vol > (20 * mean)
 
-    def _prepare_output(self, df):
-        return df
+    def _prepare_output(self, ticker, df):
+        session_dt = datetime.strptime(df["Datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
+        session_volume = float(df["Volume"])
+        mean_volume = float("{:.0f}".format(df["MeanVolume"]))
+        ticker_exchange = df["Exchange"]
+        ticker_exchange_symbol = parse.quote_plus("{}:{}".format(ticker_exchange, ticker))
+        md_post = f"""
+## {ticker}
+
+**Date:** {session_dt}
+
+**Volume:** {session_volume:,.0f}
+
+**Mean Volume:** {mean_volume:,.0f}
+
+[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol})
+
+---
+
+        """
+        return md_post
 
 
 volume_analysis_task = VolumeAnalysisTask()
