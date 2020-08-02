@@ -1,15 +1,15 @@
 import logging
-from datetime import datetime
-from urllib import parse
 
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from tqdm import tqdm
 
+from krider.notifications.console_notifier import console_notifier
 from krider.notifications.reddit_notifier import reddit_notifier
 from krider.stock_store import stock_store
 from krider.ticker_data import ticker_data
+from krider.utils.report_generator import report_generator
 from krider.utils.timing_decorator import timeit
 
 pd.set_option('display.max_rows', None)
@@ -35,7 +35,8 @@ class VolumeAnalysisTask:
                 continue
 
             if self._if_anomaly_found(selected_data):
-                collective_post.append(self._prepare_output(ticker, selected_data.iloc[0]))
+                report = report_generator.prepare_output(ticker, selected_data.iloc[0])
+                collective_post.append(report)
 
         content = dict(
             title="High Volume Indicator",
@@ -55,28 +56,6 @@ class VolumeAnalysisTask:
         df["MeanVolume"] = mean
         previous_session_vol = df["Volume"].iloc[0]
         return previous_session_vol > (20 * mean)
-
-    def _prepare_output(self, ticker, df):
-        session_dt = datetime.strptime(df["Datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
-        session_volume = float(df["Volume"])
-        mean_volume = float("{:.0f}".format(df["MeanVolume"]))
-        ticker_exchange = df["Exchange"]
-        ticker_exchange_symbol = parse.quote_plus("{}:{}".format(ticker_exchange, ticker))
-        md_post = f"""
-## {ticker}
-
-**Date:** {session_dt}
-
-**Volume:** {session_volume:,.0f}
-
-**Mean Volume:** {mean_volume:,.0f}
-
-[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol})
-
----
-
-        """
-        return md_post
 
 
 volume_analysis_task = VolumeAnalysisTask()
