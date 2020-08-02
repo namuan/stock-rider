@@ -47,7 +47,8 @@ class StockStore:
             "Low" FLOAT, 
             "Close" FLOAT, 
             "Adj Close" FLOAT, 
-            "Volume" BIGINT
+            "Volume" BIGINT,
+            "Exchange" TEXT
         )
         """
         )

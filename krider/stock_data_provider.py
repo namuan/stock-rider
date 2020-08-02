@@ -1,10 +1,11 @@
+import logging
 import yfinance
 from time import sleep
 
 
 class StockDataProvider:
     def download(self, ticker, interval, start, end):
-        print("Requesting ticker {}".format(ticker))
+        logging.debug("Requesting ticker {}".format(ticker))
         sleep(0.5)
         opts = dict(
             tickers=ticker, interval=interval, start=start, end=end, progress=False

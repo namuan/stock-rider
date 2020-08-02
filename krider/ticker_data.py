@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+from pandas import DataFrame
 
 
 class TickerData:
@@ -22,7 +23,7 @@ class TickerData:
         data_file = Path.cwd().joinpath(self.valid_listed_stocks_path)
         data_file.write_text("\n".join(valid_tickers))
 
-    def load_exchange_tickers(self):
+    def load_exchange_tickers(self) -> DataFrame:
         exchanges = [
             ("nasdaq", "nasdaq-listed.csv"),
             ("amex", "amex-listed.csv"),
