@@ -2,7 +2,6 @@ from datetime import datetime
 
 import click
 
-from krider.tasks.filter_valid_tickers import filter_valid_tickers
 from krider.tasks.historical_data_downloader import historical_data_downloader
 from krider.tasks.volume_analysis import volume_analysis_task
 from krider.utils.log_helper import init_logger
@@ -33,13 +32,13 @@ def cli():
     default="60m",
 )
 @click.option(
-    "--stock",
-    help="Download historical data for just this stock. Useful to backfill gaps",
+    "--stocks",
+    help="Download historical data and fill gaps for provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-def populate_data(interval, start, end, stock):
+def populate_data(interval, start, end, stocks):
     start_dt = datetime.strptime(start, "%Y-%m-%d")
     end_dt = datetime.strptime(end, "%Y-%m-%d")
-    result = historical_data_downloader.run_with(interval, start_dt, end_dt, stock)
+    result = historical_data_downloader.run_with(interval, start_dt, end_dt, stocks)
     click.echo(result, nl=False)
 
 
@@ -55,17 +54,15 @@ def latest_data(period):
 
 
 @cli.command()
-def filter_tickers():
-    result = filter_valid_tickers.run_with()
-    click.echo(result, nl=False)
-
-
-@cli.command()
 @click.option(
     "--period",
     help="Number of entries to use when running volume analysis",
     required=True,
 )
-def volume_analysis(period):
-    result = volume_analysis_task.run_with(period)
+@click.option(
+    "--stocks",
+    help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
+)
+def volume_analysis(period, stocks):
+    result = volume_analysis_task.run_with(period, stocks)
     click.echo(result, nl=False)

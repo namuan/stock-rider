@@ -4,7 +4,7 @@ from time import sleep
 
 
 class StockDataProvider:
-    def download(self, ticker, interval, start, end):
+    def download_between_dates(self, ticker, interval, start, end):
         logging.debug("Requesting ticker {}".format(ticker))
         sleep(0.5)
         opts = dict(

@@ -14,7 +14,7 @@ class HistoricalDataDownloader:
     def _download_and_save_ticker_data(self, ticker, ticker_exchange, interval, start_dt, end_dt):
         logging.debug("Scanning {} between {} and {}".format(ticker, start_dt, end_dt))
         try:
-            data = stock_data_provider.download(
+            data = stock_data_provider.download_between_dates(
                 ticker,
                 interval,
                 start_dt.strftime("%Y-%m-%d"),
@@ -31,11 +31,11 @@ class HistoricalDataDownloader:
             )
 
     @timeit
-    def run_with(self, interval, start_dt, end_dt, stock=None):
+    def run_with(self, interval, start_dt, end_dt, stocks=None):
         exchange_tickers: DataFrame = ticker_data.load_exchange_tickers()
 
-        if stock:
-            selected_stocks = stock.split(",")
+        if stocks:
+            selected_stocks = stocks.split(",")
             exchange_tickers = exchange_tickers[exchange_tickers.index.isin(selected_stocks)]
 
         for ticker, ticker_df in tqdm(exchange_tickers.iterrows()):

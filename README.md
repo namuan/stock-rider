@@ -6,12 +6,24 @@ Kodak Meme
 
 ### Examples
 
+*Populate data*
+
 ```bash
-# Populate selected stocks
+# selected stocks
 populate-data --stock KODK,JFK,MSFT --start 2020-01-01 --end 2020-07-31 --interval 1d
 
-# Populate all stocks
+# all stocks
 populate-data --start 2020-01-01 --end 2020-07-31 --interval 1d
+```
+
+*Run analysis*
+
+```bash
+# Selected stocks
+volume-analysis --period 200 --stocks AAPL,KODK
+
+# All stocks
+volume-analysis --period 200
 ```
 
 ### License

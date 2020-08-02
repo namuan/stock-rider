@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from tqdm import tqdm
 
 from krider.notifications.console_notifier import notifier
 from krider.stock_store import stock_store
@@ -16,13 +17,15 @@ pd.set_option('display.width', None)
 
 class VolumeAnalysisTask:
     @timeit
-    def run_with(self, period):
-        valid_tickers = [
-            ticker for ticker in ticker_data.load_valid_tickers()
-            if ticker == "KODK"
-        ]
-        for ticker in valid_tickers:
-            logging.debug("Running analysis on {}".format(ticker))
+    def run_with(self, period, stocks=None):
+        exchange_tickers: DataFrame = ticker_data.load_exchange_tickers()
+
+        if stocks:
+            selected_stocks = stocks.split(",")
+            exchange_tickers = exchange_tickers[exchange_tickers.index.isin(selected_stocks)]
+
+        for ticker, ticker_df in tqdm(exchange_tickers.iterrows()):
+            logging.info("Running analysis on {}".format(ticker))
             selected_data: DataFrame = stock_store.data_for_ticker(ticker, period)
             if selected_data.empty:
                 continue
