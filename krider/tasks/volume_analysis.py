@@ -5,6 +5,7 @@ import pandas as pd
 from pandas import DataFrame
 from tqdm import tqdm
 
+from krider.bot_config import config, DEV_MODE
 from krider.notifications.console_notifier import console_notifier
 from krider.notifications.reddit_notifier import reddit_notifier
 from krider.stock_store import stock_store
@@ -38,12 +39,17 @@ class VolumeAnalysisTask:
                 report = report_generator.prepare_output(ticker, selected_data.iloc[0])
                 collective_post.append(report)
 
+        logging.info("Total {} stocks found with usually high volume".format(len(collective_post)))
+
         content = dict(
-            title="High Volume Indicator",
-            flair_id="ae574132-d4de-11ea-9fd2-0e0ab6312af9",
+            title="[Daily] High Volume Indicator",
+            flair_id=config("HIGH_VOLUME_FLAIR"),
             body="\n".join(collective_post)
         )
-        reddit_notifier.send_notification(content)
+        if DEV_MODE:
+            console_notifier.send_notification(content)
+        else:
+            reddit_notifier.send_notification(content)
         return "All done"
 
     def _back_test_anomalies(self, df):

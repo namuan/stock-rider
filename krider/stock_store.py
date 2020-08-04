@@ -27,7 +27,7 @@ class StockStore:
         except IntegrityError as e:
             logging.warning("Unable to save data: {}".format(e.args[0]))
 
-        logging.info("Saving ticker: {} with data: {}".format(ticker, data.shape))
+        logging.debug("Saving ticker: {} with data: {}".format(ticker, data.shape))
 
     def data_for_ticker(self, ticker, period):
         sql = f"""

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import click
 
 from krider.tasks.historical_data_downloader import historical_data_downloader
@@ -16,13 +14,9 @@ def cli():
 
 @cli.command()
 @click.option(
-    "--start",
-    help="Start date which will be preferred over period. Eg. 2017-01-01",
-    required=False,
-)
-@click.option(
-    "--end",
-    help="End date which will be preferred over period. Eg 2019-01-01",
+    "--period",
+    help="Use periods to download data. Valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max",
+    default="1mo",
     required=False,
 )
 @click.option(
@@ -35,10 +29,8 @@ def cli():
     "--stocks",
     help="Download historical data and fill gaps for provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-def populate_data(interval, start, end, stocks):
-    start_dt = datetime.strptime(start, "%Y-%m-%d") if start else None
-    end_dt = datetime.strptime(end, "%Y-%m-%d") if end else None
-    result = historical_data_downloader.run_with(interval, start_dt, end_dt, stocks)
+def populate_data(interval, period, stocks):
+    result = historical_data_downloader.run_with(interval, period, stocks)
     click.echo(result, nl=False)
 
 

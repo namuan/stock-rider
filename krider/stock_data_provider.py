@@ -12,6 +12,7 @@ class StockDataProvider:
         return yfinance.download(**opts)
 
     def download_for_period(self, ticker, period, interval):
+        logging.debug("Requesting ticker {}".format(ticker))
         opts = dict(tickers=ticker, interval=interval, period=period, progress=False)
         return yfinance.download(**opts)
 

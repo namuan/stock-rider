@@ -1,17 +1,16 @@
-from datetime import datetime
 import logging
-import os
+from datetime import datetime
+
 import praw
-from dotenv import load_dotenv
 
-load_dotenv(verbose=True)
+from krider.bot_config import config
 
-REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
-REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
-REDDIT_USER = os.getenv("REDDIT_USER")
-REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
-REDDIT_USERAGENT = os.getenv("REDDIT_USERAGENT")
-SUB_REDDIT = os.getenv("SUB_REDDIT")
+REDDIT_CLIENT_ID = config("REDDIT_CLIENT_ID")
+REDDIT_CLIENT_SECRET = config("REDDIT_CLIENT_SECRET")
+REDDIT_USER = config("REDDIT_USER")
+REDDIT_PASSWORD = config("REDDIT_PASSWORD")
+REDDIT_USERAGENT = config("REDDIT_USERAGENT")
+SUB_REDDIT = config("SUB_REDDIT")
 
 
 class RedditNotifier:
