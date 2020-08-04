@@ -13,9 +13,9 @@ from krider.ticker_data import ticker_data
 from krider.utils.report_generator import report_generator
 from krider.utils.timing_decorator import timeit
 
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", None)
 
 
 class VolumeAnalysisTask:
@@ -25,7 +25,9 @@ class VolumeAnalysisTask:
 
         if stocks:
             selected_stocks = stocks.split(",")
-            exchange_tickers = exchange_tickers[exchange_tickers.index.isin(selected_stocks)]
+            exchange_tickers = exchange_tickers[
+                exchange_tickers.index.isin(selected_stocks)
+            ]
 
         collective_post = []
 
@@ -39,12 +41,16 @@ class VolumeAnalysisTask:
                 report = report_generator.prepare_output(ticker, selected_data.iloc[0])
                 collective_post.append(report)
 
-        logging.info("Total {} stocks found with usually high volume".format(len(collective_post)))
+        logging.info(
+            "Total {} stocks found with usually high volume".format(
+                len(collective_post)
+            )
+        )
 
         content = dict(
             title="[Daily] High Volume Indicator",
             flair_id=config("HIGH_VOLUME_FLAIR"),
-            body="\n".join(collective_post)
+            body="\n".join(collective_post),
         )
         if DEV_MODE:
             console_notifier.send_notification(content)

@@ -37,12 +37,18 @@ class StockStore:
             pd_sql = pd.read_sql(sql, self.db_connection)
             return pd.DataFrame(pd_sql)
         except OperationalError as e:
-            logging.debug("Error when reading data for {} - {}".format(ticker, e.args[0]))
+            logging.debug(
+                "Error when reading data for {} - {}".format(ticker, e.args[0])
+            )
             return pd.DataFrame()
 
     def find_start_time(self, ticker, default_dt):
         last_entry = self.data_for_ticker(ticker, 1)
-        start_time = default_dt if last_entry.empty else self._next_day(last_entry["Datetime"].loc[0])
+        start_time = (
+            default_dt
+            if last_entry.empty
+            else self._next_day(last_entry["Datetime"].loc[0])
+        )
         return start_time
 
     def _next_day(self, dt):

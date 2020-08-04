@@ -52,8 +52,7 @@ def latest_data(period):
     required=True,
 )
 @click.option(
-    "--stocks",
-    help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
+    "--stocks", help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
 def volume_analysis(period, stocks):
     result = volume_analysis_task.run_with(period, stocks)

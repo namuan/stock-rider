@@ -10,7 +10,9 @@ class ReportGenerator:
         session_volume = float(df["Volume"])
         mean_volume = float("{:.0f}".format(df["MeanVolume"]))
         ticker_exchange = df["Exchange"]
-        ticker_exchange_symbol = parse.quote_plus("{}:{}".format(ticker_exchange, ticker))
+        ticker_exchange_symbol = parse.quote_plus(
+            "{}:{}".format(ticker_exchange, ticker)
+        )
         md_post = f"""
 ## {ticker}
 
