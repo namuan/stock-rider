@@ -1,9 +1,10 @@
 import os
-import sys
 from datetime import datetime
+
+import sys
 from setuptools import find_packages, setup
 
-dependencies = ['click', 'yfinance', 'pandas', 'numpy', 'tqdm', 'sqlalchemy']
+dependencies = ['click', 'yfinance', 'pandas', 'numpy', 'tqdm', 'sqlalchemy', 'praw']
 
 # 'setup.py publish-test' shortcut
 if sys.argv[-1] == 'publish-test':
