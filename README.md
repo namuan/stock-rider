@@ -2,7 +2,7 @@
 
 Find anomalies in Stock market based on Volume.
 
-Kodak Meme
+![](docs/stockridertips-banner.png)
 
 ### Examples
 
