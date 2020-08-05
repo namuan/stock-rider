@@ -4,26 +4,27 @@ Find anomalies in Stock market based on Volume.
 
 ![](docs/stockridertips-banner.png)
 
-### Examples
+A live version of this is running as a bot on [StockRiderTips](https://www.reddit.com/r/StockRiderTips) sub-reddit.
+
+### Installation
+
+```bash
+pip install stock-rider
+```
+
+### Using Stocks Rider
 
 *Populate data*
 
 ```bash
-# selected stocks
-populate-data --stock KODK,JFK,MSFT --start 2020-01-01 --end 2020-07-31 --interval 1d
-
-# all stocks
-populate-data --start 2020-01-01 --end 2020-07-31 --interval 1d
+stock-rider populate-data --period 6mo --interval 1d
 ```
 
 *Run analysis*
 
 ```bash
-# Selected stocks
-volume-analysis --period 200 --stocks AAPL,KODK
-
-# All stocks
-volume-analysis --period 200
+# High Volume analysis
+stock-rider volume-analysis --period 200
 ```
 
 ### License
