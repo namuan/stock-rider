@@ -5,29 +5,29 @@ from pandas import DataFrame
 
 
 class ReportGenerator:
-    def prepare_output(self, ticker, df: DataFrame):
+    def get_header(self, ticker, df: DataFrame):
         session_dt = datetime.strptime(df["Datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
-        session_volume = float(df["Volume"])
-        mean_volume = float("{:.0f}".format(df["MeanVolume"]))
-        ticker_exchange = df["Exchange"]
+        return f"""## {ticker}
+
+**Date:** {session_dt}"""
+
+    def get_footer(self, ticker, ticker_exchange):
         ticker_exchange_symbol = parse.quote_plus(
             "{}:{}".format(ticker_exchange, ticker)
         )
+        return f"""[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol}) | 
+[Robinhood](https://robinhood.com/stocks/{ticker})"""
+
+    def prepare_output(self, ticker, df: DataFrame, body):
+        ticker_exchange = df["Exchange"]
         md_post = f"""
-## {ticker}
+{self.get_header(ticker, df)}
 
-**Date:** {session_dt}
+{body}
 
-**Volume:** {session_volume:,.0f}
+{self.get_footer(ticker, ticker_exchange)}
 
-**Mean Volume:** {mean_volume:,.0f}
-
-[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol}) | 
-[Robinhood](https://robinhood.com/stocks/{ticker})
-
----
-
-        """
+---"""
         return md_post
 
 

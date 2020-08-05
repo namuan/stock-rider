@@ -38,7 +38,9 @@ class VolumeAnalysisTask:
                 continue
 
             if self._if_anomaly_found(selected_data):
-                report = report_generator.prepare_output(ticker, selected_data.iloc[0])
+                indicator_df = selected_data.iloc[0]
+                body = self.output_body(indicator_df)
+                report = report_generator.prepare_output(ticker, indicator_df, body)
                 collective_post.append(report)
 
         logging.info(
@@ -57,6 +59,14 @@ class VolumeAnalysisTask:
         else:
             console_notifier.send_notification(content)
         return "All done"
+
+    def output_body(self, df: DataFrame):
+        session_volume = float(df["Volume"])
+        mean_volume = float("{:.0f}".format(df["MeanVolume"]))
+        md_post = f"""**Volume:** {session_volume:,.0f}
+
+**Mean Volume:** {mean_volume:,.0f}"""
+        return md_post
 
     def _back_test_anomalies(self, df):
         mean = np.mean(df["Volume"])
