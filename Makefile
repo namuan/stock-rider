@@ -18,8 +18,8 @@ clean: ## Clean package
 run: lint ## Run all unit tests
 	./venv/bin/python local_main.py
 
-populate: ## Populate data from previous day
-	./venv/bin/python local_main.py populate-data --start 2020-02-01 --interval 1d
+repopulate: ## Re-index data
+	rm stockstore.db && ./venv/bin/python local_main.py populate-data --period 6mo --interval 1d
 
 volume: ## Run Volume Analysis
 	./venv/bin/python local_main.py volume-analysis --period 200

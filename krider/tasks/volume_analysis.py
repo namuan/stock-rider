@@ -5,7 +5,7 @@ import pandas as pd
 from pandas import DataFrame
 from tqdm import tqdm
 
-from krider.bot_config import config, DEV_MODE
+from krider.bot_config import config, LIVE_MODE
 from krider.notifications.console_notifier import console_notifier
 from krider.notifications.reddit_notifier import reddit_notifier
 from krider.stock_store import stock_store
@@ -42,7 +42,7 @@ class VolumeAnalysisTask:
                 collective_post.append(report)
 
         logging.info(
-            "Total {} stocks found with usually high volume".format(
+            "Total {} stocks found with unusually high volume".format(
                 len(collective_post)
             )
         )
@@ -52,10 +52,10 @@ class VolumeAnalysisTask:
             flair_id=config("HIGH_VOLUME_FLAIR"),
             body="\n".join(collective_post),
         )
-        if DEV_MODE:
-            console_notifier.send_notification(content)
-        else:
+        if LIVE_MODE:
             reddit_notifier.send_notification(content)
+        else:
+            console_notifier.send_notification(content)
         return "All done"
 
     def _back_test_anomalies(self, df):

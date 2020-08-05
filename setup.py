@@ -33,7 +33,7 @@ except (IOError, ImportError, OSError) as e:
 
 setup(
     name='stock-rider',
-    version='0.1.' + version,
+    version='0.3.' + version,
     url='https://github.com/namuan/stock-rider',
     license='MIT',
     author='DeskRiders Dev',

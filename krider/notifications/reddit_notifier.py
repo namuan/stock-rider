@@ -15,10 +15,11 @@ class RedditNotifier:
             password=config("REDDIT_PASSWORD"),
             user_agent=config("REDDIT_USERAGENT"),
         )
-        self.sub_reddit = self.reddit.subreddit(config("SUB_REDDIT"))
+        self.sub_reddit_name = config("SUB_REDDIT")
+        self.sub_reddit = self.reddit.subreddit(self.sub_reddit_name)
 
     def send_notification(self, content):
-        logging.info(content.get("body"))
+        logging.info("Posting to reddit: {}".format(self.sub_reddit_name))
         self.sub_reddit.submit(
             title="{} : {}".format(
                 content.get("title"), datetime.now().strftime("%Y-%m-%d")
