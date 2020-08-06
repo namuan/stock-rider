@@ -1,5 +1,6 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
+from typing import Any
 
 import pandas as pd
 from pandas import DataFrame
@@ -10,11 +11,16 @@ skip_days = timedelta(days=2)
 
 
 class StockStore:
-    def __init__(self):
-        db_engine = create_engine("sqlite:///stockstore.db", echo=False)
+    db_connection: Any = None
+
+    def init_database(self, datadir):
+        db_engine = create_engine("sqlite:///{}/stockstore.db".format(datadir), echo=False)
         self.db_connection = db_engine.connect()
 
     def save(self, ticker, data: DataFrame):
+        if not self.db_connection:
+            self.init_database(".")
+
         self._create_table_if_required(ticker)
         try:
             data.to_sql(
@@ -30,6 +36,9 @@ class StockStore:
         logging.debug("Saving ticker: {} with data: {}".format(ticker, data.shape))
 
     def data_for_ticker(self, ticker, period):
+        if not self.db_connection:
+            self.init_database(".")
+
         sql = f"""
         select * from \"{ticker}\" order by Datetime desc limit {period};
         """
@@ -41,20 +50,6 @@ class StockStore:
                 "Error when reading data for {} - {}".format(ticker, e.args[0])
             )
             return pd.DataFrame()
-
-    def find_start_time(self, ticker, default_dt):
-        last_entry = self.data_for_ticker(ticker, 1)
-        start_time = (
-            default_dt
-            if last_entry.empty
-            else self._next_day(last_entry["Datetime"].loc[0])
-        )
-        return start_time
-
-    def _next_day(self, dt):
-        last_entry_dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S.%f")
-        last_entry_dt += skip_days
-        return last_entry_dt
 
     def _create_table_if_required(self, ticker):
         self.db_connection.execute(

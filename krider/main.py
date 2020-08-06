@@ -1,5 +1,6 @@
 import click
 
+from krider.stock_store import stock_store
 from krider.tasks.historical_data_downloader import historical_data_downloader
 from krider.tasks.volume_analysis import volume_analysis_task
 from krider.utils.log_helper import init_logger
@@ -29,20 +30,15 @@ def cli():
     "--stocks",
     help="Download historical data and fill gaps for provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-def populate_data(interval, period, stocks):
+@click.option(
+    "--datadir",
+    help="Directory to store database file",
+    default="."
+)
+def populate_data(interval, period, stocks, datadir):
+    stock_store.init_database(datadir)
     result = historical_data_downloader.run_with(interval, period, stocks)
     click.echo(result, nl=False)
-
-
-@cli.command()
-@click.option(
-    "--period",
-    help="Time period. 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max.",
-    required=False,
-    default="1mo",
-)
-def latest_data(period):
-    click.echo("Loading Latest data for the last {}".format(period))
 
 
 @cli.command()
@@ -54,6 +50,12 @@ def latest_data(period):
 @click.option(
     "--stocks", help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-def volume_analysis(period, stocks):
+@click.option(
+    "--datadir",
+    help="Directory to load database file",
+    default="."
+)
+def volume_analysis(period, stocks, datadir):
+    stock_store.init_database(datadir)
     result = volume_analysis_task.run_with(period, stocks)
     click.echo(result, nl=False)

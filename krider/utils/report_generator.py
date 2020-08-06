@@ -16,6 +16,7 @@ class ReportGenerator:
             "{}:{}".format(ticker_exchange, ticker)
         )
         return f"""[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol}) | 
+[Yahoo Finance](https://finance.yahoo.com/chart/{ticker}) |
 [Robinhood](https://robinhood.com/stocks/{ticker})"""
 
     def prepare_output(self, ticker, df: DataFrame, body):
