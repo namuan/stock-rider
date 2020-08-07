@@ -5,6 +5,12 @@ from pandas import DataFrame
 
 
 class ReportGenerator:
+    def wrap_in_banner(self, all_entries):
+        banner = """
+Note: These alerts are generated on **daily** ticker data after trading hours.
+        """
+        return banner + "\n".join(all_entries)
+
     def get_header(self, ticker, df: DataFrame):
         session_dt = datetime.strptime(df["Datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
         return f"""## {ticker}
