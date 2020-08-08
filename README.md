@@ -6,11 +6,15 @@ Find anomalies in Stock market based on Volume.
 
 A live version of this is running as a bot on [StockRiderTips](https://www.reddit.com/r/StockRiderTips) sub-reddit.
 
+![](docs/stockridertips-post.png)
+
 ### Installation
 
 ```bash
 pip install stock-rider
 ```
+
+Then copy `env.cfg.sample` to `env.cfg` and populate values.
 
 ### Using Stocks Rider
 

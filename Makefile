@@ -27,9 +27,6 @@ volume: ## Run Volume Analysis
 package: clean
 	./pypi.sh
 
-pipeline: ## Run Pipeline
-	pip install stock-rider && stock-rider --help
-
 .PHONY: help
 .DEFAULT_GOAL := help
 

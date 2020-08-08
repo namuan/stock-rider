@@ -49,15 +49,16 @@ class VolumeAnalysisTask:
             )
         )
 
-        content = dict(
-            title="[Daily] High Volume Indicator",
-            flair_id=config("HIGH_VOLUME_FLAIR"),
-            body=report_generator.wrap_in_banner(collective_post),
-        )
-        if LIVE_MODE:
-            reddit_notifier.send_notification(content)
-        else:
-            console_notifier.send_notification(content)
+        if collective_post:
+            content = dict(
+                title="[Daily] High Volume Indicator",
+                flair_id=config("HIGH_VOLUME_FLAIR"),
+                body=report_generator.wrap_in_banner(collective_post),
+            )
+            if LIVE_MODE:
+                reddit_notifier.send_notification(content)
+            else:
+                console_notifier.send_notification(content)
         return "All done"
 
     def output_body(self, df: DataFrame):
