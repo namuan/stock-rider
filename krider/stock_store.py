@@ -1,13 +1,10 @@
 import logging
-from datetime import timedelta
 from typing import Any
 
 import pandas as pd
 from pandas import DataFrame
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError, OperationalError
-
-skip_days = timedelta(days=2)
 
 
 class StockStore:
