@@ -68,7 +68,7 @@ class GainersLosersTask:
         if items:
             content = dict(
                 title=title,
-                flair_id=config("HIGH_VOLUME_FLAIR"),
+                flair_id=config("MOMENTUM_FLAIR"),
                 body=report_generator.wrap_in_banner(items_report),
             )
             if LIVE_MODE:
