@@ -4,7 +4,7 @@ from datetime import datetime
 import sys
 from setuptools import find_packages, setup
 
-dependencies = ['click', 'yfinance', 'pandas', 'numpy', 'tqdm', 'sqlalchemy', 'praw']
+dependencies = ['click', 'yfinance', 'pandas', 'numpy', 'tqdm', 'sqlalchemy', 'praw', 'stockstats']
 
 # 'setup.py publish-test' shortcut
 if sys.argv[-1] == 'publish-test':
@@ -33,7 +33,7 @@ except (IOError, ImportError, OSError) as e:
 
 setup(
     name='stock-rider',
-    version='0.8.' + version,
+    version='0.10.' + version,
     url='https://github.com/namuan/stock-rider',
     license='MIT',
     author='DeskRiders Dev',

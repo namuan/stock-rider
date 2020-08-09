@@ -27,13 +27,7 @@ class HistoricalDataDownloader:
 
     @timeit
     def run_with(self, interval, period, stocks=None):
-        exchange_tickers: DataFrame = ticker_data.load_exchange_tickers()
-
-        if stocks:
-            selected_stocks = stocks.split(",")
-            exchange_tickers = exchange_tickers[
-                exchange_tickers.index.isin(selected_stocks)
-            ]
+        exchange_tickers: DataFrame = ticker_data.load_exchange_tickers_or_given_stocks(stocks)
 
         for ticker, ticker_df in tqdm(exchange_tickers.iterrows()):
             ticker_exchange = ticker_df["exchange"]
