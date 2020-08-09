@@ -18,11 +18,17 @@ clean: ## Clean package
 run: lint ## Run all unit tests
 	./venv/bin/python local_main.py
 
-repopulate: ## Re-index data
-	rm stockstore.db && ./venv/bin/python local_main.py populate-data --period 6mo --interval 1d
+rmdb: # Removes database
+	(test -f stockstore.db && rm stockstore.db) || echo "No database found"
+
+repopulate: rmdb ## Re-index data
+	./venv/bin/python local_main.py populate-data --period 6mo --interval 1d
 
 volume: ## Run Volume Analysis
-	./venv/bin/python local_main.py volume-analysis --period 200
+	./venv/bin/python local_main.py volume-analysis
+
+gainlose: ## Calculate biggest gainers/losers
+	./venv/bin/python local_main.py gainers-losers
 
 package: clean
 	./pypi.sh

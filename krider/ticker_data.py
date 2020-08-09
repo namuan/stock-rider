@@ -12,9 +12,17 @@ class TickerData:
             ("nyse", "nyse-listed.csv"),
         ]
 
-    def load_exchange_tickers(self) -> DataFrame:
+    def load_exchange_tickers_or_given_stocks(self, stocks) -> DataFrame:
         exchange_securities = [s for s in self._extract_data(self.exchanges)]
-        return pd.concat(exchange_securities)
+        exchange_tickers = pd.concat(exchange_securities)
+
+        if stocks:
+            selected_stocks = stocks.split(",")
+            exchange_tickers = exchange_tickers[
+                exchange_tickers.index.isin(selected_stocks)
+            ]
+
+        return exchange_tickers
 
     def _extract_data(self, exchanges):
         for exchange, data_file in exchanges:

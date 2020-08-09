@@ -1,6 +1,7 @@
 import click
 
 from krider.stock_store import stock_store
+from krider.tasks.gainers_losers import gainers_losers_task
 from krider.tasks.historical_data_downloader import historical_data_downloader
 from krider.tasks.volume_analysis import volume_analysis_task
 from krider.utils.log_helper import init_logger
@@ -30,11 +31,7 @@ def cli():
     "--stocks",
     help="Download historical data and fill gaps for provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-@click.option(
-    "--datadir",
-    help="Directory to store database file",
-    default="."
-)
+@click.option("--datadir", help="Directory to store database file", default=".")
 def populate_data(interval, period, stocks, datadir):
     stock_store.init_database(datadir)
     result = historical_data_downloader.run_with(interval, period, stocks)
@@ -43,19 +40,24 @@ def populate_data(interval, period, stocks, datadir):
 
 @cli.command()
 @click.option(
-    "--period",
-    help="Number of entries to use when running volume analysis",
-    required=True,
+    "--stocks", help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
+)
+@click.option("--datadir", help="Directory to load database file", default=".")
+def volume_analysis(stocks, datadir):
+    stock_store.init_database(datadir)
+    result = volume_analysis_task.run_with(stocks)
+    click.echo(result, nl=False)
+
+
+@cli.command()
+@click.option(
+    "--minvol", default=20000, help="Minimum Volume when checking for Gains/Losses",
 )
 @click.option(
     "--stocks", help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
 )
-@click.option(
-    "--datadir",
-    help="Directory to load database file",
-    default="."
-)
-def volume_analysis(period, stocks, datadir):
+@click.option("--datadir", help="Directory to load database file", default=".")
+def gainers_losers(stocks, minvol, datadir):
     stock_store.init_database(datadir)
-    result = volume_analysis_task.run_with(period, stocks)
+    result = gainers_losers_task.run_with(minvol, stocks)
     click.echo(result, nl=False)

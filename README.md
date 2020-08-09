@@ -28,7 +28,10 @@ stock-rider populate-data --period 6mo --interval 1d
 
 ```bash
 # High Volume analysis
-stock-rider volume-analysis --period 200
+stock-rider volume-analysis
+
+# Gains/Losses
+stock-rider gainers-losers
 ```
 
 ### License

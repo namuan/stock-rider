@@ -5,13 +5,16 @@ import pandas as pd
 from pandas import DataFrame
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError, OperationalError
+from stockstats import StockDataFrame
 
 
 class StockStore:
     db_connection: Any = None
 
     def init_database(self, datadir):
-        db_engine = create_engine("sqlite:///{}/stockstore.db".format(datadir), echo=False)
+        db_engine = create_engine(
+            "sqlite:///{}/stockstore.db".format(datadir), echo=False
+        )
         self.db_connection = db_engine.connect()
 
     def save(self, ticker, data: DataFrame):
@@ -32,16 +35,16 @@ class StockStore:
 
         logging.debug("Saving ticker: {} with data: {}".format(ticker, data.shape))
 
-    def data_for_ticker(self, ticker, period):
+    def data_for_ticker(self, ticker):
         if not self.db_connection:
             self.init_database(".")
 
         sql = f"""
-        select * from \"{ticker}\" order by Datetime desc limit {period};
+        select * from \"{ticker}\" order by Datetime;
         """
         try:
             pd_sql = pd.read_sql(sql, self.db_connection)
-            return pd.DataFrame(pd_sql)
+            return StockDataFrame.retype(pd.DataFrame(pd_sql))
         except OperationalError as e:
             logging.debug(
                 "Error when reading data for {} - {}".format(ticker, e.args[0])

@@ -12,7 +12,7 @@ Note: These alerts are generated on **daily** ticker data after trading hours.
         return banner + "\n".join(all_entries)
 
     def get_header(self, ticker, df: DataFrame):
-        session_dt = datetime.strptime(df["Datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
+        session_dt = datetime.strptime(df["datetime"], "%Y-%m-%d %H:%M:%S.%f").date()
         return f"""## {ticker}
 
 **Date:** {session_dt}"""
@@ -26,7 +26,7 @@ Note: These alerts are generated on **daily** ticker data after trading hours.
 [Robinhood](https://robinhood.com/stocks/{ticker})"""
 
     def prepare_output(self, ticker, df: DataFrame, body):
-        ticker_exchange = df["Exchange"]
+        ticker_exchange = df["exchange"]
         md_post = f"""
 {self.get_header(ticker, df)}
 
