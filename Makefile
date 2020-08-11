@@ -30,6 +30,9 @@ volume: ## Run Volume Analysis
 gainlose: ## Calculate biggest gainers/losers
 	./venv/bin/python local_main.py gainers-losers
 
+pipeline: repopulate volume gainlose ## Runs the whole pipeline
+	echo "Completed"
+
 package: clean
 	./pypi.sh
 
