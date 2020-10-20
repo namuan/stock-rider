@@ -4,6 +4,7 @@ from krider.stock_store import stock_store
 from krider.tasks.ema_cross_over import ema_cross_over_task
 from krider.tasks.gainers_losers import gainers_losers_task
 from krider.tasks.historical_data_downloader import historical_data_downloader
+from krider.tasks.momentum_stocks import momentum_stocks_task
 from krider.tasks.volume_analysis import volume_analysis_task
 from krider.utils.log_helper import init_logger
 
@@ -85,4 +86,15 @@ def gainers_losers(stocks, minvol, datadir):
 def ema_cross_over(stocks, price_filter, volume_filter, ema, datadir):
     stock_store.init_database(datadir)
     result = ema_cross_over_task.run_with(ema, price_filter, volume_filter, stocks)
+    click.echo(result, nl=False)
+
+
+@cli.command()
+@click.option(
+    "--stocks", help="Run analysis on provided list of stocks. Eg. MSFT,TSLA,AAPL",
+)
+@click.option("--datadir", help="Directory to load database file", default=".")
+def momentum_stocks(stocks, datadir):
+    stock_store.init_database(datadir)
+    result = momentum_stocks_task.run_with(stocks)
     click.echo(result, nl=False)
