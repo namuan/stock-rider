@@ -21,11 +21,15 @@ pd.set_option("display.width", None)
 class VolumeAnalysisTask:
     @timeit
     def run_with(self, stocks=None):
-        exchange_tickers: DataFrame = ticker_data.load_exchange_tickers_or_given_stocks(stocks)
+        exchange_tickers: DataFrame = ticker_data.load_exchange_tickers_or_given_stocks(
+            stocks
+        )
 
         collective_post = []
 
-        for ticker, ticker_df in tqdm(exchange_tickers.iterrows(), desc='Running volume analysis'):
+        for ticker, ticker_df in tqdm(
+            exchange_tickers.iterrows(), desc="Running volume analysis"
+        ):
             logging.debug("Running analysis on {}".format(ticker))
             selected_data = stock_store.data_for_ticker(ticker)
             if selected_data.empty:

@@ -22,7 +22,7 @@ rmdb: # Removes database
 	(test -f stockstore.db && rm stockstore.db) || echo "No database found"
 
 repopulate: rmdb ## Re-index data
-	./venv/bin/python local_main.py populate-data --period 6mo --interval 1d
+	./venv/bin/python local_main.py populate-data --period 12mo --interval 1d
 
 volume: ## Run Volume Analysis
 	./venv/bin/python local_main.py volume-analysis
