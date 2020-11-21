@@ -1,6 +1,6 @@
 ## Stocks Rider
 
-Find anomalies in Stock market based on Volume.
+Find anomalies in Stock market.
 
 ![](docs/stockridertips-banner.png)
 
@@ -33,6 +33,11 @@ stock-rider volume-analysis
 # Gains/Losses
 stock-rider gainers-losers
 ```
+
+### Publishing
+
+Increment version in setup.py
+Publish with `make package`
 
 ### License
 

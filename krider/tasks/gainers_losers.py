@@ -14,6 +14,14 @@ from krider.utils.timing_decorator import timeit
 
 
 class GainersLosersTask:
+    VOL_THRESHOLD = 500000
+    PRICE_THRESHOLD = 5
+
+    def criteria_not_met(self, df):
+        prev_close = df["close"].iloc[-1]
+        prev_vol = df["volume"].iloc[-1]
+        return prev_close < self.PRICE_THRESHOLD or prev_vol < self.VOL_THRESHOLD
+
     @timeit
     def run_with(self, min_volume, stocks):
         exchange_tickers: DataFrame = ticker_data.load_exchange_tickers_or_given_stocks(
@@ -28,6 +36,10 @@ class GainersLosersTask:
             logging.debug("Running analysis on {}".format(ticker))
             selected_data: DataFrame = stock_store.data_for_ticker(ticker)
             if selected_data.empty:
+                continue
+
+            # filter ticker based on criteria
+            if self.criteria_not_met(selected_data):
                 continue
 
             change = self._calculate_change(selected_data)

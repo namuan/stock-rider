@@ -23,6 +23,9 @@ Note: These alerts are generated on **daily** ticker data after trading hours.
         )
         return f"""[Trading View](https://www.tradingview.com/chart/?symbol={ticker_exchange_symbol}) | 
 [Yahoo Finance](https://finance.yahoo.com/chart/{ticker}) |
+[BarChart] https://www.barchart.com/stocks/quotes/{ticker}/overview
+[ChartMill] https://www.chartmill.com/stock/quote/{ticker}/profile
+[StockInvest] https://stockinvest.us/technical-analysis/{ticker}
 [Robinhood](https://robinhood.com/stocks/{ticker})"""
 
     def prepare_output(self, ticker, df: DataFrame, body):
